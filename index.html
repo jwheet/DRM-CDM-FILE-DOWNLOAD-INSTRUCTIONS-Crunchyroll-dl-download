@@ -237,21 +237,44 @@
 
         .prereq-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
             margin: 20px 0;
         }
 
         .prereq-item {
             background: rgba(26, 61, 47, 0.6);
-            padding: 15px;
-            border-radius: 6px;
-            border: 1px solid rgba(107, 168, 77, 0.3);
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid rgba(107, 168, 77, 0.4);
+            display: flex;
+            flex-direction: column;
+            min-height: 200px;
         }
 
-        .prereq-item i {
+        .prereq-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(107, 168, 77, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .prereq-header i {
             color: var(--forest-accent);
             margin-right: 10px;
+            font-size: 1.5rem;
+        }
+
+        .prereq-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .prereq-content p {
+            margin: 8px 0;
+            font-size: 0.9rem;
         }
 
         footer {
@@ -379,6 +402,10 @@
                 display: block;
                 margin: 10px auto;
             }
+            
+            .prereq-item {
+                min-height: auto;
+            }
         }
     </style>
 </head>
@@ -406,26 +433,62 @@
                 <div class="os-content active" id="linux-content">
                     <div class="prereq-list">
                         <div class="prereq-item">
-                            <i class="fab fa-python"></i> <strong>Python 3.8+</strong>
-                            <div class="command-container">
-                                <div class="command">sudo apt update && sudo apt install python3 python3-pip python3-venv</div>
-                                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                            <div class="prereq-header">
+                                <i class="fab fa-python"></i>
+                                <strong>Python 3.8+</strong>
+                            </div>
+                            <div class="prereq-content">
+                                <div class="command-container">
+                                    <div class="command">sudo apt update && sudo apt install python3 python3-pip python3-venv</div>
+                                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                                </div>
                             </div>
                         </div>
                         
                         <div class="prereq-item">
-                            <i class="fab fa-android"></i> <strong>Android Tools</strong>
-                            <div class="command-container">
-                                <div class="command">sudo apt install android-tools-adb wget unzip</div>
-                                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                            <div class="prereq-header">
+                                <i class="fab fa-android"></i>
+                                <strong>Android Studio</strong>
+                            </div>
+                            <div class="prereq-content">
+                                <div class="command-container">
+                                    <div class="command">flatpak install flathub com.google.AndroidStudio -y</div>
+                                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                                </div>
+                                <p><strong>Note:</strong> If flatpak is not installed: <code>sudo apt install flatpak</code></p>
                             </div>
                         </div>
                         
                         <div class="prereq-item">
-                            <i class="fas fa-toolbox"></i> <strong>Additional Dependencies</strong>
-                            <div class="command-container">
-                                <div class="command">sudo apt install libc6-dev libgconf-2-4</div>
-                                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                            <div class="prereq-header">
+                                <i class="fas fa-tools"></i>
+                                <strong>Android Tools</strong>
+                            </div>
+                            <div class="prereq-content">
+                                <div class="command-container">
+                                    <div class="command">sudo apt install android-tools-adb wget unzip</div>
+                                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                                </div>
+                                <p>Essential ADB tools and utilities</p>
+                            </div>
+                        </div>
+                        
+                        <div class="prereq-item">
+                            <div class="prereq-header">
+                                <i class="fas fa-cogs"></i>
+                                <strong>System Dependencies</strong>
+                            </div>
+                            <div class="prereq-content">
+                                <div class="command-container">
+                                    <div class="command">wget http://ftp.debian.org/debian/pool/main/g/gconf/libgconf-2-4_3.2.6-8_amd64.deb && sudo dpkg -i libgconf-2-4_3.2.6-8_amd64.deb</div>
+                                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                                </div>
+                                <p>Required system libraries for CDM extraction tools</p>
+                                <div class="warning">
+                                    <i class="fas fa-exclamation-triangle"></i> 
+                                    <strong>Note:</strong> libgconf-2-4 has been removed from recent Linux distributions. 
+                                    This command manually downloads and installs the package from Debian repositories.
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -434,21 +497,61 @@
                 <div class="os-content" id="windows-content">
                     <div class="prereq-list">
                         <div class="prereq-item">
-                            <i class="fab fa-python"></i> <strong>Python 3.8+</strong>
-                            <p>Download from <a href="https://python.org" class="download-link">python.org</a></p>
-                            <p>During installation, <strong>check "Add Python to PATH"</strong></p>
+                            <div class="prereq-header">
+                                <i class="fab fa-python"></i>
+                                <strong>Python 3.8+</strong>
+                            </div>
+                            <div class="prereq-content">
+                                <p><strong>Option 1 (winget):</strong></p>
+                                <div class="command-container">
+                                    <div class="command">winget install Python.Python.3.10</div>
+                                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                                </div>
+                                <p><strong>Option 2 (manual):</strong> Download from <a href="https://python.org" class="download-link">python.org</a></p>
+                                <p><strong>Important:</strong> Check "Add Python to PATH" during installation</p>
+                            </div>
                         </div>
                         
                         <div class="prereq-item">
-                            <i class="fab fa-android"></i> <strong>Android Studio</strong>
-                            <p>Download from <a href="https://developer.android.com/studio" class="download-link">developer.android.com/studio</a></p>
-                            <p>Includes Android SDK and emulator</p>
+                            <div class="prereq-header">
+                                <i class="fab fa-android"></i>
+                                <strong>Android Studio</strong>
+                            </div>
+                            <div class="prereq-content">
+                                <p><strong>Option 1 (winget):</strong></p>
+                                <div class="command-container">
+                                    <div class="command">winget install Google.AndroidStudio</div>
+                                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                                </div>
+                                <p><strong>Option 2 (manual):</strong> Download from <a href="https://developer.android.com/studio" class="download-link">developer.android.com/studio</a></p>
+                                <p>Run the installer and follow the setup wizard</p>
+                            </div>
                         </div>
                         
                         <div class="prereq-item">
-                            <i class="fas fa-toolbox"></i> <strong>Android Platform Tools (ADB)</strong>
-                            <p>Download from <a href="https://developer.android.com/tools/releases/platform-tools" class="download-link">platform-tools page</a></p>
-                            <p>Extract and add to your PATH</p>
+                            <div class="prereq-header">
+                                <i class="fas fa-tools"></i>
+                                <strong>Android Tools</strong>
+                            </div>
+                            <div class="prereq-content">
+                                <p>Download Platform Tools from <a href="https://developer.android.com/tools/releases/platform-tools" class="download-link">platform-tools page</a></p>
+                                <p>Extract and add to your PATH environment variable</p>
+                            </div>
+                        </div>
+                        
+                        <div class="prereq-item">
+                            <div class="prereq-header">
+                                <i class="fas fa-cogs"></i>
+                                <strong>System Dependencies</strong>
+                            </div>
+                            <div class="prereq-content">
+                                <p><strong>Visual C++ Redistributable:</strong></p>
+                                <div class="command-container">
+                                    <div class="command">winget install Microsoft.VCRedist.2015+.x64</div>
+                                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                                </div>
+                                <p><strong>Note:</strong> The libc6-dev and libgconf-2-4 dependencies are Linux-specific. On Windows, install the Visual C++ Redistributable as the equivalent system dependency.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -848,7 +951,7 @@ Version=1.0
 Type=Application
 Name=Crunchyroll Downloader
 Comment=Download videos from Crunchyroll
-Exec=$INSTALL_DIR/Crunchyroll\\ Downloader
+Exec=$INSTALL_DIR/Crunchyroll\\\\ Downloader
 Icon=video-x-generic
 Categories=AudioVideo;Video;
 Terminal=false
@@ -865,7 +968,7 @@ Version=1.0
 Type=Application
 Name=Crunchyroll Downloader
 Comment=Download videos from Crunchyroll
-Exec=$INSTALL_DIR/Crunchyroll\\ Downloader
+Exec=$INSTALL_DIR/Crunchyroll\\\\ Downloader
 Icon=video-x-generic
 Categories=AudioVideo;Video;
 Terminal=false
@@ -900,62 +1003,62 @@ setlocal EnableDelayedExpansion
 
 echo Starting Crunchyroll Downloader Setup...
 
-set "CDM_SOURCE_DIR=%USERPROFILE%\\Downloads\\CDM"
-set "INSTALL_DIR=%USERPROFILE%\\Downloads\\Crunchyroll-Downloader"
+set "CDM_SOURCE_DIR=%USERPROFILE%\\\\Downloads\\\\CDM"
+set "INSTALL_DIR=%USERPROFILE%\\\\Downloads\\\\Crunchyroll-Downloader"
 set "CRUNCHY_URL=https://github.com/Crunchy-DL/Crunchy-Downloader/releases/download/v1.5.79/Crunchyroll-Downloader-v1.5.79-windows-x64.zip"
 set "BENTO4_URL=https://www.bok.net/Bento4/binaries/Bento4-SDK-1-6-0-641.x86_64-microsoft-win32.zip"
 
 echo Downloading Crunchyroll Downloader...
-powershell -Command "Invoke-WebRequest -Uri '%CRUNCHY_URL%' -OutFile '%TEMP%\\crunchyroll-downloader.zip'"
+powershell -Command "Invoke-WebRequest -Uri '%CRUNCHY_URL%' -OutFile '%TEMP%\\\\crunchyroll-downloader.zip'"
 
 echo Downloading Bento4 (mp4decrypt)...
-powershell -Command "Invoke-WebRequest -Uri '%BENTO4_URL%' -OutFile '%TEMP%\\bento4.zip'"
+powershell -Command "Invoke-WebRequest -Uri '%BENTO4_URL%' -OutFile '%TEMP%\\\\bento4.zip'"
 
 echo Creating installation directory...
 if exist "%INSTALL_DIR%" rmdir /s /q "%INSTALL_DIR%"
 mkdir "%INSTALL_DIR%"
 
 echo Extracting applications...
-powershell -Command "Expand-Archive -Path '%TEMP%\\crunchyroll-downloader.zip' -DestinationPath '%INSTALL_DIR%' -Force"
-powershell -Command "Expand-Archive -Path '%TEMP%\\bento4.zip' -DestinationPath '%TEMP%\\bento4' -Force"
+powershell -Command "Expand-Archive -Path '%TEMP%\\\\crunchyroll-downloader.zip' -DestinationPath '%INSTALL_DIR%' -Force"
+powershell -Command "Expand-Archive -Path '%TEMP%\\\\bento4.zip' -DestinationPath '%TEMP%\\\\bento4' -Force"
 
 echo Creating folder structure...
-mkdir "%INSTALL_DIR%\\widevine"
-mkdir "%INSTALL_DIR%\\lib"
+mkdir "%INSTALL_DIR%\\\\widevine"
+mkdir "%INSTALL_DIR%\\\\lib"
 
 echo Setting up mp4decrypt...
-for /r "%TEMP%\\bento4" %%i in (*mp4decrypt*) do (
-    if not exist "%INSTALL_DIR%\\lib\\mp4decrypt.exe" copy "%%i" "%INSTALL_DIR%\\lib\\mp4decrypt.exe"
+for /r "%TEMP%\\\\bento4" %%i in (*mp4decrypt*) do (
+    if not exist "%INSTALL_DIR%\\\\lib\\\\mp4decrypt.exe" copy "%%i" "%INSTALL_DIR%\\\\lib\\\\mp4decrypt.exe"
 )
 
 echo Copying CDM keys...
-if exist "%CDM_SOURCE_DIR%\\widevine\\client_id.bin" (
-    copy "%CDM_SOURCE_DIR%\\widevine\\client_id.bin" "%INSTALL_DIR%\\widevine\\"
+if exist "%CDM_SOURCE_DIR%\\\\widevine\\\\client_id.bin" (
+    copy "%CDM_SOURCE_DIR%\\\\widevine\\\\client_id.bin" "%INSTALL_DIR%\\\\widevine\\\\"
     echo ✓ Copied client_id.bin
 ) else (
-    echo ⚠ client_id.bin not found in %CDM_SOURCE_DIR%\\widevine\\
-    echo Please copy it manually to %INSTALL_DIR%\\widevine\\
+    echo ⚠ client_id.bin not found in %CDM_SOURCE_DIR%\\\\widevine\\\\
+    echo Please copy it manually to %INSTALL_DIR%\\\\widevine\\\\
 )
 
-if exist "%CDM_SOURCE_DIR%\\widevine\\private_key.pem" (
-    copy "%CDM_SOURCE_DIR%\\widevine\\private_key.pem" "%INSTALL_DIR%\\widevine\\"
+if exist "%CDM_SOURCE_DIR%\\\\widevine\\\\private_key.pem" (
+    copy "%CDM_SOURCE_DIR%\\\\widevine\\\\private_key.pem" "%INSTALL_DIR%\\\\widevine\\\\"
     echo ✓ Copied private_key.pem
 ) else (
-    echo ⚠ private_key.pem not found in %CDM_SOURCE_DIR%\\widevine\\
-    echo Please copy it manually to %INSTALL_DIR%\\widevine\\
+    echo ⚠ private_key.pem not found in %CDM_SOURCE_DIR%\\\\widevine\\\\
+    echo Please copy it manually to %CDM_SOURCE_DIR%\\\\widevine\\\\
 )
 
 echo Creating desktop shortcut...
-set "SHORTCUT_PATH=%USERPROFILE%\\Desktop\\Crunchyroll Downloader.lnk"
-powershell -Command "$WshShell = New-Object -comObject WScript.Shell; $Shortcut = $WshShell.CreateShortcut('%SHORTCUT_PATH%'); $Shortcut.TargetPath = '%INSTALL_DIR%\\Crunchyroll Downloader.exe'; $Shortcut.Save()"
+set "SHORTCUT_PATH=%USERPROFILE%\\\\Desktop\\\\Crunchyroll Downloader.lnk"
+powershell -Command "$WshShell = New-Object -comObject WScript.Shell; $Shortcut = $WshShell.CreateShortcut('%SHORTCUT_PATH%'); $Shortcut.TargetPath = '%INSTALL_DIR%\\\\Crunchyroll Downloader.exe'; $Shortcut.Save()"
 
 echo Creating Start Menu shortcut...
-set "START_MENU_PATH=%APPDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\Crunchyroll Downloader.lnk"
-powershell -Command "$WshShell = New-Object -comObject WScript.Shell; $Shortcut = $WshShell.CreateShortcut('%START_MENU_PATH%'); $Shortcut.TargetPath = '%INSTALL_DIR%\\Crunchyroll Downloader.exe'; $Shortcut.Save()"
+set "START_MENU_PATH=%APPDATA%\\\\Microsoft\\\\Windows\\\\Start Menu\\\\Programs\\\\Crunchyroll Downloader.lnk"
+powershell -Command "$WshShell = New-Object -comObject WScript.Shell; $Shortcut = $WshShell.CreateShortcut('%START_MENU_PATH%'); $Shortcut.TargetPath = '%INSTALL_DIR%\\\\Crunchyroll Downloader.exe'; $Shortcut.Save()"
 
 echo Cleaning up temporary files...
-del "%TEMP%\\crunchyroll-downloader.zip"
-rmdir /s /q "%TEMP%\\bento4"
+del "%TEMP%\\\\crunchyroll-downloader.zip"
+rmdir /s /q "%TEMP%\\\\bento4"
 
 echo.
 echo ✓ Setup complete!
@@ -964,7 +1067,7 @@ echo ✓ Desktop shortcut created
 echo ✓ Start Menu shortcut created
 echo.
 echo Launching Crunchyroll Downloader...
-start "" "%INSTALL_DIR%\\Crunchyroll Downloader.exe"
+start "" "%INSTALL_DIR%\\\\Crunchyroll Downloader.exe"
 
 echo You can now search for 'Crunchyroll Downloader' in your Start Menu!
 echo.
