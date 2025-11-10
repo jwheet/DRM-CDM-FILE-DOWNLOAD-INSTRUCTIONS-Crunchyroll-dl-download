@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete CDM Extraction & Setup Guide</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --forest-dark: #1a3d2f;
+            --forest-medium: #2d5a45;
+            --forest-light: #4a7c5f;
+            --forest-accent: #6ba84d;
+            --forest-highlight: #8fc97a;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --error: #f44336;
+            --text-light: #e8f4ea;
+            --text-dark: #1a2a1f;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--forest-dark), var(--forest-medium));
+            color: var(--text-light);
+            line-height: 1.6;
+            padding: 0;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .os-switcher {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            background: rgba(45, 90, 69, 0.7);
+            border-radius: 50px;
+            padding: 10px;
+            max-width: 400px;
+            margin: 0 auto 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .os-btn {
+            flex: 1;
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            border-radius: 50px;
+        }
+
+        .os-btn.active {
+            background: var(--forest-accent);
+            color: var(--text-dark);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .os-btn:hover:not(.active) {
+            background: rgba(107, 168, 77, 0.3);
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(rgba(26, 61, 47, 0.9), rgba(26, 61, 47, 0.95));
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--forest-accent), var(--forest-highlight));
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            color: var(--forest-highlight);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            color: var(--text-light);
+            opacity: 0.9;
+        }
+
+        .phase {
+            background: rgba(45, 90, 69, 0.7);
+            border-left: 5px solid var(--forest-accent);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .phase:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .phase-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            color: var(--forest-highlight);
+            font-size: 1.5rem;
+        }
+
+        .phase-icon {
+            background: var(--forest-medium);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+
+        .instructions {
+            background: rgba(26, 61, 47, 0.5);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(107, 168, 77, 0.3);
+        }
+
+        .command-container {
+            display: flex;
+            margin-bottom: 15px;
+            background: rgba(26, 61, 47, 0.8);
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid rgba(107, 168, 77, 0.2);
+        }
+
+        .command {
+            flex-grow: 1;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            background: rgba(26, 61, 47, 0.9);
+            color: var(--forest-highlight);
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .copy-btn {
+            background: var(--forest-accent);
+            color: var(--text-dark);
+            border: none;
+            padding: 0 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .copy-btn:hover {
+            background: var(--forest-highlight);
+        }
+
+        .copy-btn.copied {
+            background: var(--success);
+        }
+
+        .os-content {
+            display: none;
+        }
+
+        .os-content.active {
+            display: block;
+        }
+
+        .note {
+            background: rgba(107, 168, 77, 0.2);
+            border-left: 4px solid var(--forest-accent);
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 4px;
+        }
+
+        .warning {
+            background: rgba(168, 77, 77, 0.2);
+            border-left: 4px solid var(--warning);
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 4px;
+        }
+
+        .error {
+            background: rgba(244, 67, 54, 0.2);
+            border-left: 4px solid var(--error);
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 4px;
+        }
+
+        .file-structure {
+            background: rgba(26, 61, 47, 0.7);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+
+        .prereq-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .prereq-item {
+            background: rgba(26, 61, 47, 0.6);
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid rgba(107, 168, 77, 0.3);
+        }
+
+        .prereq-item i {
+            color: var(--forest-accent);
+            margin-right: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 40px;
+            border-top: 1px solid rgba(107, 168, 77, 0.3);
+            color: var(--forest-highlight);
+            font-size: 0.9rem;
+        }
+
+        .step-counter {
+            display: inline-block;
+            background: var(--forest-accent);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .download-link {
+            color: var(--forest-highlight);
+            text-decoration: none;
+            border-bottom: 1px dashed var(--forest-highlight);
+            transition: all 0.3s ease;
+        }
+
+        .download-link:hover {
+            color: var(--forest-accent);
+            border-bottom: 1px solid var(--forest-accent);
+        }
+
+        .download-box {
+            background: rgba(45, 90, 69, 0.7);
+            border: 2px dashed var(--forest-accent);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .download-btn {
+            display: inline-block;
+            background: var(--forest-accent);
+            color: var(--text-dark);
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .download-btn:hover {
+            background: var(--forest-highlight);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .download-btn i {
+            margin-right: 10px;
+        }
+
+        .file-content {
+            background: rgba(26, 61, 47, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .instructions ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .phase-title {
+                font-size: 1.3rem;
+            }
+            
+            .command-container {
+                flex-direction: column;
+            }
+            
+            .copy-btn {
+                padding: 10px;
+            }
+            
+            .prereq-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .os-switcher {
+                flex-direction: column;
+                border-radius: 10px;
+            }
+            
+            .os-btn {
+                border-radius: 5px;
+                margin-bottom: 5px;
+            }
+            
+            .download-btn {
+                display: block;
+                margin: 10px auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="os-switcher">
+            <button class="os-btn active" data-os="linux">Linux Instructions</button>
+            <button class="os-btn" data-os="windows">Windows Instructions</button>
+        </div>
+
+        <header>
+            <h1><i class="fas fa-key"></i> Complete CDM Extraction & Setup Guide</h1>
+            <p class="subtitle">A comprehensive guide to extracting CDM keys and setting up Crunchyroll downloader</p>
+        </header>
+
+        <div class="phase">
+            <div class="phase-title">
+                <div class="phase-icon"><i class="fas fa-download"></i></div>
+                <h2>Phase 1: Prerequisites Installation</h2>
+            </div>
+            
+            <div class="instructions">
+                <p>Before starting, you need to install these required applications:</p>
+                
+                <div class="os-content active" id="linux-content">
+                    <div class="prereq-list">
+                        <div class="prereq-item">
+                            <i class="fab fa-python"></i> <strong>Python 3.8+</strong>
+                            <div class="command-container">
+                                <div class="command">sudo apt update && sudo apt install python3 python3-pip python3-venv</div>
+                                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                            </div>
+                        </div>
+                        
+                        <div class="prereq-item">
+                            <i class="fab fa-android"></i> <strong>Android Tools</strong>
+                            <div class="command-container">
+                                <div class="command">sudo apt install android-tools-adb wget unzip</div>
+                                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                            </div>
+                        </div>
+                        
+                        <div class="prereq-item">
+                            <i class="fas fa-toolbox"></i> <strong>Additional Dependencies</strong>
+                            <div class="command-container">
+                                <div class="command">sudo apt install libc6-dev libgconf-2-4</div>
+                                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="os-content" id="windows-content">
+                    <div class="prereq-list">
+                        <div class="prereq-item">
+                            <i class="fab fa-python"></i> <strong>Python 3.8+</strong>
+                            <p>Download from <a href="https://python.org" class="download-link">python.org</a></p>
+                            <p>During installation, <strong>check "Add Python to PATH"</strong></p>
+                        </div>
+                        
+                        <div class="prereq-item">
+                            <i class="fab fa-android"></i> <strong>Android Studio</strong>
+                            <p>Download from <a href="https://developer.android.com/studio" class="download-link">developer.android.com/studio</a></p>
+                            <p>Includes Android SDK and emulator</p>
+                        </div>
+                        
+                        <div class="prereq-item">
+                            <i class="fas fa-toolbox"></i> <strong>Android Platform Tools (ADB)</strong>
+                            <p>Download from <a href="https://developer.android.com/tools/releases/platform-tools" class="download-link">platform-tools page</a></p>
+                            <p>Extract and add to your PATH</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="note">
+                    <i class="fas fa-lightbulb"></i> <strong>PATH Configuration:</strong> After installing these tools, make sure they're accessible from command line. Test by running <code>python3 --version</code> and <code>adb version</code> in a new terminal.
+                </div>
+            </div>
+        </div>
+
+        <div class="phase">
+            <div class="phase-title">
+                <div class="phase-icon"><i class="fas fa-cogs"></i></div>
+                <h2>Phase 2: Virtual Environment & Python Setup</h2>
+            </div>
+            
+            <div class="instructions">
+                <p>We'll create a Python virtual environment to isolate our dependencies and avoid conflicts with system Python.</p>
+            </div>
+            
+            <div class="os-content active" id="linux-env">
+                <div class="command-container">
+                    <div class="command">mkdir -p ~/Downloads/CDM && cd ~/Downloads/CDM</div>
+                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                </div>
+                
+                <div class="command-container">
+                    <div class="command">python3 -m venv cdm_env</div>
+                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                </div>
+                
+                <div class="command-container">
+                    <div class="command">source ~/Downloads/CDM/cdm_env/bin/activate</div>
+                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                </div>
+            </div>
+            
+            <div class="os-content" id="windows-env">
+                <div class="command-container">
+                    <div class="command">mkdir "%USERPROFILE%\Downloads\CDM" && cd /d "%USERPROFILE%\Downloads\CDM"</div>
+                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                </div>
+                
+                <div class="command-container">
+                    <div class="command">python -m venv cdm_env</div>
+                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                </div>
+                
+                <div class="command-container">
+                    <div class="command">call "%USERPROFILE%\Downloads\CDM\cdm_env\Scripts\activate.bat"</div>
+                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                </div>
+            </div>
+            
+            <div class="note">
+                <i class="fas fa-info-circle"></i> <strong>Virtual Environment Benefits:</strong> This creates an isolated Python environment with its own packages, preventing conflicts with other Python projects. You'll need to activate this environment every time you work on this project.
+            </div>
+        </div>
+
+        <div class="phase">
+            <div class="phase-title">
+                <div class="phase-icon"><i class="fas fa-tools"></i></div>
+                <h2>Phase 3: Python Package Installation</h2>
+            </div>
+            
+            <div class="instructions">
+                <p>With our virtual environment activated, we'll install the required Python packages for CDM extraction.</p>
+            </div>
+            
+            <div class="command-container">
+                <div class="command">pip install --upgrade pip</div>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+            
+            <div class="command-container">
+                <div class="command">pip install keydive frida-tools</div>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+            
+            <div class="note">
+                <i class="fas fa-lightbulb"></i> <strong>Package Details:</strong> 
+                <ul>
+                    <li><strong>keydive</strong> - The main tool for CDM extraction</li>
+                    <li><strong>frida-tools</strong> - Dynamic instrumentation toolkit for intercepting DRM processes</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="phase">
+            <div class="phase-title">
+                <div class="phase-icon"><i class="fas fa-download"></i></div>
+                <h2>Phase 4: Downloading Required Tools</h2>
+            </div>
+            
+            <div class="instructions">
+                <p>We'll download Frida server for the Android emulator.</p>
+            </div>
+            
+            <div class="os-content active" id="linux-tools">
+                <div class="command-container">
+                    <div class="command">wget -O frida-server.xz "https://github.com/frida/frida/releases/download/17.5.1/frida-server-17.5.1-android-x86_64.xz"</div>
+                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                </div>
+                
+                <div class="command-container">
+                    <div class="command">unxz frida-server.xz</div>
+                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                </div>
+                
+                <div class="command-container">
+                    <div class="command">chmod +x frida-server-17.5.1-android-x86_64</div>
+                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                </div>
+            </div>
+            
+            <div class="os-content" id="windows-tools">
+                <div class="command-container">
+                    <div class="command">powershell -Command "Invoke-WebRequest -Uri 'https://github.com/frida/frida/releases/download/17.5.1/frida-server-17.5.1-android-x86_64.xz' -OutFile 'frida-server.xz'"</div>
+                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                </div>
+                
+                <div class="command-container">
+                    <div class="command">tar -xf frida-server.xz</div>
+                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                </div>
+            </div>
+            
+            <div class="note">
+                <i class="fas fa-info-circle"></i> <strong>Info:</strong> Frida server allows us to intercept DRM processes on the Android emulator.
+            </div>
+        </div>
+
+        <div class="phase">
+            <div class="phase-title">
+                <div class="phase-icon"><i class="fas fa-mobile-alt"></i></div>
+                <h2>Phase 5: Android Emulator Setup</h2>
+            </div>
+            
+            <div class="instructions">
+                <p>Now we need to set up the Android emulator with specific settings:</p>
+                <ol>
+                    <li>Open Android Studio → Configure → AVD Manager</li>
+                    <li>Create Virtual Device → Pixel 4 XL</li>
+                    <li>System Image: Android 10.0 (Q) - API 29 - WITHOUT Google Play</li>
+                    <li>Complete setup and START the emulator</li>
+                </ol>
+            </div>
+            
+            <div class="command-container">
+                <div class="command">adb devices</div>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+            
+            <div class="os-content active" id="linux-emulator">
+                <div class="command-container">
+                    <div class="command">adb push frida-server-17.5.1-android-x86_64 /data/local/tmp/frida-server</div>
+                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                </div>
+            </div>
+            
+            <div class="os-content" id="windows-emulator">
+                <div class="command-container">
+                    <div class="command">adb push frida-server-17.5.1-android-x86_64 /data/local/tmp/frida-server</div>
+                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                </div>
+            </div>
+            
+            <div class="command-container">
+                <div class="command">adb shell "chmod 755 /data/local/tmp/frida-server"</div>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+            
+            <div class="command-container">
+                <div class="command">adb shell "/data/local/tmp/frida-server &"</div>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+            
+            <div class="warning">
+                <i class="fas fa-exclamation-triangle"></i> <strong>Important:</strong> The emulator must be fully booted before running these commands. Wait until you see the Android home screen.
+            </div>
+        </div>
+
+        <div class="phase">
+            <div class="phase-title">
+                <div class="phase-icon"><i class="fas fa-key"></i></div>
+                <h2>Phase 6: CDM Key Extraction</h2>
+            </div>
+            
+            <div class="instructions">
+                <p>This is the core of the process - extracting your unique CDM keys.</p>
+                <p>When the app opens on the emulator, you MUST tap 'Provision Widevine' to trigger the extraction.</p>
+            </div>
+            
+            <div class="command-container">
+                <div class="command">keydive -kw -a player</div>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+            
+            <div class="note">
+                <i class="fas fa-lightbulb"></i> <strong>Note:</strong> This process will automatically install the DRM test app and extract your CDM keys. The extraction may take a few minutes.
+            </div>
+            
+            <div class="warning">
+                <i class="fas fa-exclamation-triangle"></i> <strong>Troubleshooting:</strong> If keydive fails, make sure:
+                <ul>
+                    <li>Your virtual environment is activated (you should see (cdm_env) in your terminal)</li>
+                    <li>The Android emulator is running and accessible via ADB</li>
+                    <li>Frida server is running on the emulator</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="phase">
+            <div class="phase-title">
+                <div class="phase-icon"><i class="fas fa-folder"></i></div>
+                <h2>Phase 7: Organize CDM Files</h2>
+            </div>
+            
+            <div class="instructions">
+                <p>After extraction, organize your CDM files in the CDM folder.</p>
+            </div>
+            
+            <div class="os-content active" id="linux-organize">
+                <div class="command-container">
+                    <div class="command">mkdir -p ~/Downloads/CDM/widevine</div>
+                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                </div>
+                
+                <div class="command-container">
+                    <div class="command">cp ~/Downloads/CDM/device/*/client_id.bin ~/Downloads/CDM/widevine/</div>
+                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                </div>
+                
+                <div class="command-container">
+                    <div class="command">cp ~/Downloads/CDM/device/*/private_key.pem ~/Downloads/CDM/widevine/</div>
+                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                </div>
+            </div>
+            
+            <div class="os-content" id="windows-organize">
+                <div class="command-container">
+                    <div class="command">mkdir "%USERPROFILE%\Downloads\CDM\widevine"</div>
+                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                </div>
+                
+                <div class="command-container">
+                    <div class="command">copy "%USERPROFILE%\Downloads\CDM\device\*\client_id.bin" "%USERPROFILE%\Downloads\CDM\widevine\"</div>
+                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                </div>
+                
+                <div class="command-container">
+                    <div class="command">copy "%USERPROFILE%\Downloads\CDM\device\*\private_key.pem" "%USERPROFILE%\Downloads\CDM\widevine\"</div>
+                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                </div>
+            </div>
+            
+            <div class="file-structure">
+                <div>Your CDM folder structure should look like this:</div>
+                <div>~/Downloads/CDM/ (Linux) or %USERPROFILE%\Downloads\CDM\ (Windows)</div>
+                <div>├── cdm_env/ (Python virtual environment)</div>
+                <div>├── device/ (CDM extraction output)</div>
+                <div>├── widevine/</div>
+                <div>│   ├── client_id.bin</div>
+                <div>│   └── private_key.pem</div>
+                <div>└── frida-server-17.5.1-android-x86_64</div>
+            </div>
+        </div>
+
+        <div class="phase">
+            <div class="phase-title">
+                <div class="phase-icon"><i class="fas fa-download"></i></div>
+                <h2>Phase 8: Complete Automated Setup</h2>
+            </div>
+            
+            <div class="instructions">
+                <p>Download the setup script for your operating system. The script will automatically handle everything:</p>
+                <ul>
+                    <li>Download Crunchyroll Downloader from GitHub</li>
+                    <li>Download and setup mp4decrypt</li>
+                    <li>Copy your CDM keys automatically</li>
+                    <li>Create desktop and application menu shortcuts</li>
+                    <li>Set up complete folder structure</li>
+                    <li>Launch the application automatically</li>
+                </ul>
+                
+                <div class="os-content active" id="linux-setup">
+                    <div class="download-box">
+                        <h3>Linux Automated Setup</h3>
+                        <button class="download-btn" onclick="downloadFile('setup-crunch.sh', linuxSetupScript)">
+                            <i class="fas fa-download"></i> Download Linux Setup Script
+                        </button>
+                        
+                        <div class="note">
+                            <i class="fas fa-info-circle"></i> 
+                            <strong>Instructions:</strong>
+                            <ol>
+                                <li>Download the setup script above</li>
+                                <li>Make it executable: <code>chmod +x setup-crunch.sh</code></li>
+                                <li>Run the script: <code>./setup-crunch.sh</code></li>
+                                <li>The script handles everything automatically and will launch the app</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="os-content" id="windows-setup">
+                    <div class="download-box">
+                        <h3>Windows Automated Setup</h3>
+                        <button class="download-btn" onclick="downloadFile('setup-crunch.bat', windowsSetupScript)">
+                            <i class="fas fa-download"></i> Download Windows Setup Script
+                        </button>
+                        
+                        <div class="note">
+                            <i class="fas fa-info-circle"></i> 
+                            <strong>Instructions:</strong>
+                            <ol>
+                                <li>Download the setup script above</li>
+                                <li>Double-click <code>setup-crunch.bat</code> to run it</li>
+                                <li>The script handles everything automatically and will launch the app</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="file-structure">
+                    Final Application Structure:<br>
+                    Crunchyroll-Downloader/<br>
+                    ├── widevine/ (CDM files automatically copied here)<br>
+                    │   ├── client_id.bin<br>
+                    │   └── private_key.pem<br>
+                    ├── lib/<br>
+                    │   └── mp4decrypt (automatically downloaded)<br>
+                    └── Crunchyroll Downloader (automatically downloaded)
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p><i class="fas fa-key"></i> Complete CDM Extraction Guide | Created for Educational Purposes <i class="fas fa-key"></i></p>
+            <p>Always respect content creators and use these tools responsibly</p>
+        </footer>
+    </div>
+
+    <script>
+        // File content definitions
+        const linuxSetupScript = `#!/bin/bash
+
+echo "Starting Crunchyroll Downloader Setup..."
+
+CDM_SOURCE_DIR="$HOME/Downloads/CDM"
+INSTALL_DIR="$HOME/Downloads/Crunchyroll-Downloader"
+CRUNCHY_URL="https://github.com/Crunchy-DL/Crunchy-Downloader/releases/download/v1.5.79/Crunchyroll-Downloader-v1.5.79-linux-x64.zip"
+BENTO4_URL="https://www.bok.net/Bento4/binaries/Bento4-SDK-1-6-0-641.x86_64-unknown-linux.zip"
+
+echo "Downloading Crunchyroll Downloader..."
+wget -O /tmp/crunchyroll-downloader.zip "$CRUNCHY_URL"
+
+echo "Downloading Bento4 (mp4decrypt)..."
+wget -O /tmp/bento4.zip "$BENTO4_URL"
+
+echo "Creating installation directory..."
+mkdir -p "$INSTALL_DIR"
+
+echo "Extracting applications..."
+unzip -o /tmp/crunchyroll-downloader.zip -d "$INSTALL_DIR"
+unzip -o /tmp/bento4.zip -d /tmp/bento4
+
+echo "Creating folder structure..."
+mkdir -p "$INSTALL_DIR/widevine"
+mkdir -p "$INSTALL_DIR/lib"
+
+echo "Setting up mp4decrypt..."
+find /tmp/bento4 -name "mp4decrypt" -type f -exec cp {} "$INSTALL_DIR/lib/" \\;
+chmod +x "$INSTALL_DIR/lib/mp4decrypt"
+
+echo "Copying CDM keys..."
+if [ -f "$CDM_SOURCE_DIR/widevine/client_id.bin" ]; then
+    cp "$CDM_SOURCE_DIR/widevine/client_id.bin" "$INSTALL_DIR/widevine/"
+    echo "✓ Copied client_id.bin"
+else
+    echo "⚠ client_id.bin not found in $CDM_SOURCE_DIR/widevine/"
+    echo "Please copy it manually to $INSTALL_DIR/widevine/"
+fi
+
+if [ -f "$CDM_SOURCE_DIR/widevine/private_key.pem" ]; then
+    cp "$CDM_SOURCE_DIR/widevine/private_key.pem" "$INSTALL_DIR/widevine/"
+    echo "✓ Copied private_key.pem"
+else
+    echo "⚠ private_key.pem not found in $CDM_SOURCE_DIR/widevine/"
+    echo "Please copy it manually to $INSTALL_DIR/widevine/"
+fi
+
+echo "Creating desktop launcher..."
+cat > "$HOME/Desktop/Crunchyroll-Downloader.desktop" << EOF
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Crunchyroll Downloader
+Comment=Download videos from Crunchyroll
+Exec=$INSTALL_DIR/Crunchyroll\\ Downloader
+Icon=video-x-generic
+Categories=AudioVideo;Video;
+Terminal=false
+StartupNotify=true
+EOF
+
+chmod +x "$HOME/Desktop/Crunchyroll-Downloader.desktop"
+
+echo "Creating application menu entry..."
+mkdir -p "$HOME/.local/share/applications"
+cat > "$HOME/.local/share/applications/Crunchyroll-Downloader.desktop" << EOF
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Crunchyroll Downloader
+Comment=Download videos from Crunchyroll
+Exec=$INSTALL_DIR/Crunchyroll\\ Downloader
+Icon=video-x-generic
+Categories=AudioVideo;Video;
+Terminal=false
+StartupNotify=true
+EOF
+
+chmod +x "$HOME/.local/share/applications/Crunchyroll-Downloader.desktop"
+
+echo "Updating desktop database..."
+update-desktop-database "$HOME/.local/share/applications"
+
+echo "Cleaning up temporary files..."
+rm -f /tmp/crunchyroll-downloader.zip
+rm -rf /tmp/bento4
+
+echo ""
+echo "✓ Setup complete!"
+echo "✓ Application installed to: $INSTALL_DIR"
+echo "✓ Desktop launcher created"
+echo "✓ Application menu entry created"
+echo ""
+echo "Launching Crunchyroll Downloader..."
+nohup "$INSTALL_DIR/Crunchyroll Downloader" > /dev/null 2>&1 &
+
+echo "You can now search for 'Crunchyroll Downloader' in your applications menu!"
+echo ""
+`;
+
+        const windowsSetupScript = `@echo off
+chcp 65001 >nul
+setlocal EnableDelayedExpansion
+
+echo Starting Crunchyroll Downloader Setup...
+
+set "CDM_SOURCE_DIR=%USERPROFILE%\\Downloads\\CDM"
+set "INSTALL_DIR=%USERPROFILE%\\Downloads\\Crunchyroll-Downloader"
+set "CRUNCHY_URL=https://github.com/Crunchy-DL/Crunchy-Downloader/releases/download/v1.5.79/Crunchyroll-Downloader-v1.5.79-windows-x64.zip"
+set "BENTO4_URL=https://www.bok.net/Bento4/binaries/Bento4-SDK-1-6-0-641.x86_64-microsoft-win32.zip"
+
+echo Downloading Crunchyroll Downloader...
+powershell -Command "Invoke-WebRequest -Uri '%CRUNCHY_URL%' -OutFile '%TEMP%\\crunchyroll-downloader.zip'"
+
+echo Downloading Bento4 (mp4decrypt)...
+powershell -Command "Invoke-WebRequest -Uri '%BENTO4_URL%' -OutFile '%TEMP%\\bento4.zip'"
+
+echo Creating installation directory...
+if exist "%INSTALL_DIR%" rmdir /s /q "%INSTALL_DIR%"
+mkdir "%INSTALL_DIR%"
+
+echo Extracting applications...
+powershell -Command "Expand-Archive -Path '%TEMP%\\crunchyroll-downloader.zip' -DestinationPath '%INSTALL_DIR%' -Force"
+powershell -Command "Expand-Archive -Path '%TEMP%\\bento4.zip' -DestinationPath '%TEMP%\\bento4' -Force"
+
+echo Creating folder structure...
+mkdir "%INSTALL_DIR%\\widevine"
+mkdir "%INSTALL_DIR%\\lib"
+
+echo Setting up mp4decrypt...
+for /r "%TEMP%\\bento4" %%i in (*mp4decrypt*) do (
+    if not exist "%INSTALL_DIR%\\lib\\mp4decrypt.exe" copy "%%i" "%INSTALL_DIR%\\lib\\mp4decrypt.exe"
+)
+
+echo Copying CDM keys...
+if exist "%CDM_SOURCE_DIR%\\widevine\\client_id.bin" (
+    copy "%CDM_SOURCE_DIR%\\widevine\\client_id.bin" "%INSTALL_DIR%\\widevine\\"
+    echo ✓ Copied client_id.bin
+) else (
+    echo ⚠ client_id.bin not found in %CDM_SOURCE_DIR%\\widevine\\
+    echo Please copy it manually to %INSTALL_DIR%\\widevine\\
+)
+
+if exist "%CDM_SOURCE_DIR%\\widevine\\private_key.pem" (
+    copy "%CDM_SOURCE_DIR%\\widevine\\private_key.pem" "%INSTALL_DIR%\\widevine\\"
+    echo ✓ Copied private_key.pem
+) else (
+    echo ⚠ private_key.pem not found in %CDM_SOURCE_DIR%\\widevine\\
+    echo Please copy it manually to %INSTALL_DIR%\\widevine\\
+)
+
+echo Creating desktop shortcut...
+set "SHORTCUT_PATH=%USERPROFILE%\\Desktop\\Crunchyroll Downloader.lnk"
+powershell -Command "$WshShell = New-Object -comObject WScript.Shell; $Shortcut = $WshShell.CreateShortcut('%SHORTCUT_PATH%'); $Shortcut.TargetPath = '%INSTALL_DIR%\\Crunchyroll Downloader.exe'; $Shortcut.Save()"
+
+echo Creating Start Menu shortcut...
+set "START_MENU_PATH=%APPDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\Crunchyroll Downloader.lnk"
+powershell -Command "$WshShell = New-Object -comObject WScript.Shell; $Shortcut = $WshShell.CreateShortcut('%START_MENU_PATH%'); $Shortcut.TargetPath = '%INSTALL_DIR%\\Crunchyroll Downloader.exe'; $Shortcut.Save()"
+
+echo Cleaning up temporary files...
+del "%TEMP%\\crunchyroll-downloader.zip"
+rmdir /s /q "%TEMP%\\bento4"
+
+echo.
+echo ✓ Setup complete!
+echo ✓ Application installed to: %INSTALL_DIR%
+echo ✓ Desktop shortcut created
+echo ✓ Start Menu shortcut created
+echo.
+echo Launching Crunchyroll Downloader...
+start "" "%INSTALL_DIR%\\Crunchyroll Downloader.exe"
+
+echo You can now search for 'Crunchyroll Downloader' in your Start Menu!
+echo.
+pause
+`;
+
+        // Utility functions
+        function copyCommand(button) {
+            const command = button.parentElement.querySelector('.command').textContent;
+            navigator.clipboard.writeText(command).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+        
+        function downloadFile(filename, content) {
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+        
+        // OS Switcher functionality
+        document.querySelectorAll('.os-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.os-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const os = btn.getAttribute('data-os');
+                
+                // Show/hide OS-specific content
+                document.querySelectorAll('.os-content').forEach(content => {
+                    if (content.id.includes(os)) {
+                        content.classList.add('active');
+                    } else {
+                        content.classList.remove('active');
+                    }
+                });
+            });
+        });
+        
+        // Add interactive effects
+        document.addEventListener('DOMContentLoaded', () => {
+            const phases = document.querySelectorAll('.phase');
+            
+            phases.forEach(phase => {
+                phase.addEventListener('click', () => {
+                    phase.style.transform = 'scale(1.02)';
+                    setTimeout(() => {
+                        phase.style.transform = '';
+                    }, 150);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
