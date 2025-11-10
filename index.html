@@ -480,14 +480,13 @@
                             </div>
                             <div class="prereq-content">
                                 <div class="command-container">
-                                    <div class="command">wget http://ftp.debian.org/debian/pool/main/g/gconf/libgconf-2-4_3.2.6-8_amd64.deb && sudo dpkg -i libgconf-2-4_3.2.6-8_amd64.deb</div>
+                                    <div class="command">sudo apt install libc6-dev</div>
                                     <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
                                 </div>
                                 <p>Required system libraries for CDM extraction tools</p>
                                 <div class="warning">
                                     <i class="fas fa-exclamation-triangle"></i> 
-                                    <strong>Note:</strong> libgconf-2-4 has been removed from recent Linux distributions. 
-                                    This command manually downloads and installs the package from Debian repositories.
+                                    <strong>Note:</strong> If you previously had issues with libgconf-2-4, run <code>sudo apt --fix-broken install</code> first to resolve dependency issues.
                                 </div>
                             </div>
                         </div>
@@ -657,7 +656,17 @@
                 </div>
                 
                 <div class="command-container">
+                    <div class="command">ls -la frida-server.xz</div>
+                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                </div>
+                
+                <div class="command-container">
                     <div class="command">unxz frida-server.xz</div>
+                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                </div>
+                
+                <div class="command-container">
+                    <div class="command">ls -la frida-server*</div>
                     <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
                 </div>
                 
@@ -680,7 +689,7 @@
             </div>
             
             <div class="note">
-                <i class="fas fa-info-circle"></i> <strong>Info:</strong> Frida server allows us to intercept DRM processes on the Android emulator.
+                <i class="fas fa-info-circle"></i> <strong>Verification Steps:</strong> The <code>ls</code> commands verify the files exist at each step. If <code>frida-server-17.5.1-android-x86_64</code> doesn't appear, the extraction failed.
             </div>
         </div>
 
@@ -729,8 +738,13 @@
                 <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
             </div>
             
+            <div class="command-container">
+                <div class="command">adb shell "ps | grep frida-server"</div>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+            
             <div class="warning">
-                <i class="fas fa-exclamation-triangle"></i> <strong>Important:</strong> The emulator must be fully booted before running these commands. Wait until you see the Android home screen.
+                <i class="fas fa-exclamation-triangle"></i> <strong>Important:</strong> The emulator must be fully booted before running these commands. Wait until you see the Android home screen. The <code>ps | grep frida-server</code> command verifies Frida is running.
             </div>
         </div>
 
@@ -760,6 +774,7 @@
                     <li>Your virtual environment is activated (you should see (cdm_env) in your terminal)</li>
                     <li>The Android emulator is running and accessible via ADB</li>
                     <li>Frida server is running on the emulator</li>
+                    <li>You tapped 'Provision Widevine' in the DRM test app</li>
                 </ul>
             </div>
         </div>
@@ -771,10 +786,20 @@
             </div>
             
             <div class="instructions">
-                <p>After extraction, organize your CDM files in the CDM folder.</p>
+                <p>After extraction, organize your CDM files in the CDM folder. First verify the files were created:</p>
             </div>
             
             <div class="os-content active" id="linux-organize">
+                <div class="command-container">
+                    <div class="command">ls -la ~/Downloads/CDM/device/</div>
+                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                </div>
+                
+                <div class="command-container">
+                    <div class="command">find ~/Downloads/CDM/device/ -name "client_id.bin" -o -name "private_key.pem"</div>
+                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                </div>
+                
                 <div class="command-container">
                     <div class="command">mkdir -p ~/Downloads/CDM/widevine</div>
                     <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
@@ -787,6 +812,11 @@
                 
                 <div class="command-container">
                     <div class="command">cp ~/Downloads/CDM/device/*/private_key.pem ~/Downloads/CDM/widevine/</div>
+                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                </div>
+                
+                <div class="command-container">
+                    <div class="command">ls -la ~/Downloads/CDM/widevine/</div>
                     <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
                 </div>
             </div>
@@ -809,10 +839,13 @@
             </div>
             
             <div class="file-structure">
-                <div>Your CDM folder structure should look like this:</div>
+                <div>Your CDM folder structure should look like this after successful extraction:</div>
                 <div>~/Downloads/CDM/ (Linux) or %USERPROFILE%\Downloads\CDM\ (Windows)</div>
                 <div>├── cdm_env/ (Python virtual environment)</div>
                 <div>├── device/ (CDM extraction output)</div>
+                <div>│   └── [timestamp-or-hash]/</div>
+                <div>│       ├── client_id.bin</div>
+                <div>│       └── private_key.pem</div>
                 <div>├── widevine/</div>
                 <div>│   ├── client_id.bin</div>
                 <div>│   └── private_key.pem</div>
