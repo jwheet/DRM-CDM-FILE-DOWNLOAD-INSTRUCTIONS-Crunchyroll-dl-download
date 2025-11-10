@@ -642,11 +642,11 @@
         <div class="phase">
             <div class="phase-title">
                 <div class="phase-icon"><i class="fas fa-download"></i></div>
-                <h2>Phase 4: Downloading Required Tools</h2>
+                <h2>Phase 4: Downloading Required Tools - FIXED</h2>
             </div>
             
             <div class="instructions">
-                <p>We'll download Frida server for the Android emulator.</p>
+                <p>We'll download Frida server for the Android emulator. <strong>NOTE:</strong> The extracted file is named <code>frida-server</code> (not the versioned filename).</p>
             </div>
             
             <div class="os-content active" id="linux-tools">
@@ -671,7 +671,7 @@
                 </div>
                 
                 <div class="command-container">
-                    <div class="command">chmod +x frida-server-17.5.1-android-x86_64</div>
+                    <div class="command">chmod +x frida-server</div>
                     <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
                 </div>
             </div>
@@ -686,21 +686,26 @@
                     <div class="command">tar -xf frida-server.xz</div>
                     <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
                 </div>
+                
+                <div class="command-container">
+                    <div class="command">chmod +x frida-server</div>
+                    <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                </div>
             </div>
             
             <div class="note">
-                <i class="fas fa-info-circle"></i> <strong>Verification Steps:</strong> The <code>ls</code> commands verify the files exist at each step. If <code>frida-server-17.5.1-android-x86_64</code> doesn't appear, the extraction failed.
+                <i class="fas fa-info-circle"></i> <strong>Important Fix:</strong> The extracted file is named <code>frida-server</code> (not <code>frida-server-17.5.1-android-x86_64</code>). Use <code>frida-server</code> for all subsequent commands.
             </div>
         </div>
 
         <div class="phase">
             <div class="phase-title">
                 <div class="phase-icon"><i class="fas fa-mobile-alt"></i></div>
-                <h2>Phase 5: Android Emulator Setup</h2>
+                <h2>Phase 5: Android Emulator Setup - FIXED</h2>
             </div>
             
             <div class="instructions">
-                <p>Now we need to set up the Android emulator with specific settings:</p>
+                <p>Now we need to set up the Android emulator with specific settings and deploy Frida server:</p>
                 <ol>
                     <li>Open Android Studio → Configure → AVD Manager</li>
                     <li>Create Virtual Device → Pixel 4 XL</li>
@@ -716,14 +721,14 @@
             
             <div class="os-content active" id="linux-emulator">
                 <div class="command-container">
-                    <div class="command">adb push frida-server-17.5.1-android-x86_64 /data/local/tmp/frida-server</div>
+                    <div class="command">adb push frida-server /data/local/tmp/frida-server</div>
                     <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
                 </div>
             </div>
             
             <div class="os-content" id="windows-emulator">
                 <div class="command-container">
-                    <div class="command">adb push frida-server-17.5.1-android-x86_64 /data/local/tmp/frida-server</div>
+                    <div class="command">adb push frida-server /data/local/tmp/frida-server</div>
                     <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
                 </div>
             </div>
@@ -773,7 +778,7 @@
                 <ul>
                     <li>Your virtual environment is activated (you should see (cdm_env) in your terminal)</li>
                     <li>The Android emulator is running and accessible via ADB</li>
-                    <li>Frida server is running on the emulator</li>
+                    <li>Frida server is running on the emulator (verified with <code>adb shell "ps | grep frida-server"</code>)</li>
                     <li>You tapped 'Provision Widevine' in the DRM test app</li>
                 </ul>
             </div>
@@ -849,7 +854,7 @@
                 <div>├── widevine/</div>
                 <div>│   ├── client_id.bin</div>
                 <div>│   └── private_key.pem</div>
-                <div>└── frida-server-17.5.1-android-x86_64</div>
+                <div>└── frida-server</div>
             </div>
         </div>
 
